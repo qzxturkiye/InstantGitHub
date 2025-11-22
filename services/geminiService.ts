@@ -3,8 +3,27 @@ import { AIAnalysisResult } from "../types";
 
 // Initialize Gemini client
 // Note: In a real production app, API keys should be proxied via backend. 
-// For this demo, we assume process.env.API_KEY is available or injected.
-const apiKey = process.env.API_KEY || ""; 
+// We use a safe check for process.env to prevent "process is not defined" crashes in browser.
+const getApiKey = () => {
+  try {
+    // @ts-ignore
+    if (typeof process !== 'undefined' && process.env?.API_KEY) {
+      // @ts-ignore
+      return process.env.API_KEY;
+    }
+    // Check for Vite specific env if needed, or other bundler injections
+    // @ts-ignore
+    if (typeof import.meta !== 'undefined' && import.meta.env?.API_KEY) {
+       // @ts-ignore
+       return import.meta.env.API_KEY;
+    }
+  } catch (e) {
+    console.warn("Could not read API_KEY from environment.");
+  }
+  return "";
+};
+
+const apiKey = getApiKey();
 const ai = new GoogleGenAI({ apiKey });
 
 export const analyzeRepository = async (
@@ -15,7 +34,7 @@ export const analyzeRepository = async (
   targetLanguage: 'tr' | 'en' | 'de' | 'es' = 'tr'
 ): Promise<AIAnalysisResult> => {
   if (!apiKey) {
-    throw new Error(targetLanguage === 'tr' ? "API Key eksik." : "API Key missing.");
+    throw new Error(targetLanguage === 'tr' ? "API Key eksik (Uygulama .env dosyası olmadan çalışıyor)." : "API Key missing (App running without .env).");
   }
 
   // Truncate readme to avoid token limits for this demo
