@@ -197,12 +197,17 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ repo, isOpen, onCl
                                         </span>
                                         <span className="text-slate-500 mb-1">/ 10</span>
                                     </div>
-                                    <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                                    <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden mb-3">
                                         <div 
                                             className={`h-full rounded-full transition-all duration-1000 ${analysis.complexityScore > 7 ? 'bg-red-500' : analysis.complexityScore > 4 ? 'bg-yellow-500' : 'bg-green-500'}`} 
                                             style={{ width: `${analysis.complexityScore * 10}%` }}
                                         ></div>
                                     </div>
+                                    {analysis.complexityExplanation && (
+                                        <p className="text-xs text-slate-400 italic leading-relaxed border-t border-slate-700/50 pt-2 mt-2">
+                                            "{analysis.complexityExplanation}"
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="bg-slate-800/40 border border-slate-700 rounded-xl p-5">

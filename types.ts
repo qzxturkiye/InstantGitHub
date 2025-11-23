@@ -44,6 +44,7 @@ export interface GitHubRepo {
 export interface AIAnalysisResult {
   summary: string;
   complexityScore: number; // 1-10
+  complexityExplanation: string;
   suggestedUseCases: string[];
   techStackAnalysis: string;
 }
